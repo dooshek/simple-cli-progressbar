@@ -17,13 +17,13 @@ Whenever you run a script that process a lot of data and you want to know when i
 Via npm:
 
 ```
-npm i simple-progressbar --save
+npm i simple-cli-progressbar --save
 ```
 
 Or if you just want the GIT repository:
 
 ```
-git clone git@github.com:dooshek/simple-progressbar.git
+git clone git@github.com:dooshek/simple-cli-progressbar.git
 ```
 
 > You can find every working example in module directory under `examples/` directory.
