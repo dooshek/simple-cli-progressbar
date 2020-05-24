@@ -1,10 +1,10 @@
-# simple-progressbar
+# simple-cli-progressbar
 
 Quick and easy to use **progressbar** for **CLI scripts** that mangles a lot of data. Calculates time to the end based on number of iterations passed. When iterations are  
 
 ![](https://res.cloudinary.com/dooshekln/image/upload/v1590338153/npmjs/simple-cli-progressbar/example-header_wfxzvr.gif)
 
-- [simple-progressbar](#simple-progressbar)
+- [simple-cli-progressbar](#simple-cli-progressbar)
   - [Why would I want that?](#why-would-i-want-that)
   - [Installation](#installation)
   - [Simple usage](#simple-usage)
