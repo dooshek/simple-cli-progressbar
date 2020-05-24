@@ -30,7 +30,7 @@ git clone git@github.com:dooshek/simple-cli-progressbar.git
 
 ## Simple usage
 ```javascript
-const SimpleProgressBar = require('simple-progressbar')
+const SimpleProgressBar = require('simple-cli-progressbar')
 const delay = (time) => new Promise((resolve) => setTimeout(resolve, time))
 
 const test = async function () {
