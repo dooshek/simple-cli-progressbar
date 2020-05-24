@@ -34,7 +34,7 @@ const SimpleProgressBar = require('simple-progressbar')
 const delay = (time) => new Promise((resolve) => setTimeout(resolve, time))
 
 const test = async function () {
-  // How many records in total would you 
+  // How many records in total?
   const totalRecords = 250
   const progressbar = new SimpleProgressBar({ total: totalRecords })
 
@@ -47,5 +47,6 @@ const test = async function () {
   }
 }
 
-test()```
+test()
+```
 ![](https://res.cloudinary.com/dooshekln/image/upload/v1590339547/npmjs/simple-cli-progressbar/example1_brfi8a.gif)
