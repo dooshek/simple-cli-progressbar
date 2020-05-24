@@ -2,7 +2,7 @@
 
 Quick and easy to use **progressbar** for **CLI scripts** that mangles a lot of data. Calculates time to the end based on number of iterations passed. When iterations are  
 
-![](https://res.cloudinary.com/dooshekln/image/upload/v1590338153/npmjs/simple-cli-progressbar/example-header_wfxzvr.gif)
+![](https://res.cloudinary.com/dooshekln/image/upload/v1590339547/npmjs/simple-cli-progressbar/example1_brfi8a.gif)
 
 - [simple-cli-progressbar](#simple-cli-progressbar)
   - [Why would I want that?](#why-would-i-want-that)
@@ -34,12 +34,11 @@ const SimpleProgressBar = require('simple-progressbar')
 const delay = (time) => new Promise((resolve) => setTimeout(resolve, time))
 
 const test = async function () {
-
   // How many records in total would you 
-  const records = 250
-  const progressbar = new SimpleProgressBar({ records: records })
+  const totalRecords = 250
+  const progressbar = new SimpleProgressBar({ total: totalRecords })
 
-  for (let i = 0; i < records; i++) {
+  for (let i = 0; i < totalRecords; i++) {
 
     // currentRecord cannot be 0 so you need to add 1 here
     progressbar.show({ currentRecord: i + 1 })
@@ -48,6 +47,5 @@ const test = async function () {
   }
 }
 
-test()
-```
-![](https://res.cloudinary.com/dooshekln/image/upload/v1590338154/npmjs/simple-cli-progressbar/example1_udhiya.gif)
+test()```
+![](https://res.cloudinary.com/dooshekln/image/upload/v1590339547/npmjs/simple-cli-progressbar/example1_brfi8a.gif)

@@ -19,7 +19,7 @@ class SimpleProgressBar {
     this.options = { ...this.options, ...options }
 
     SimpleProgressBar._assert(Number.isInteger(this.options.width) && this.options.width > 0, 'width', this.options.width, 'should be integer > 1')
-    SimpleProgressBar._assert(Number.isInteger(this.options.records) && this.options.records > 1, 'records', this.options.records, 'should be integer greather > 1')
+    SimpleProgressBar._assert(Number.isInteger(this.options.total) && this.options.total > 1, 'total', this.options.total, 'should be integer greather > 1')
     SimpleProgressBar._assert(typeof this.options.inplace === 'boolean', 'inplace', this.options.inplace, 'should be boolean')
     SimpleProgressBar._assert(this.options.format === 'bytes' || this.options.format === 'number', 'format', this.options.format, 'should be one of: number, bytes')
     SimpleProgressBar._assert(typeof this.options.colors.percent === 'function', 'colors.percent', typeof this.options.colors.percent, 'should be a chalk function')
@@ -40,10 +40,12 @@ class SimpleProgressBar {
     this.maxOutLen = 0
 
     this.options = {
-      records: null,
+      total: null,
       inplace: true,
       width: 60,
       format: 'number',
+      completed: '█',
+      pending: '░',
       colors: {
         percent: chalk.white.bold,
         fill: chalk.rgb(204, 0, 153).bold,
@@ -57,7 +59,7 @@ class SimpleProgressBar {
   show({ currentRecord }) {
 
     SimpleProgressBar._assert(Number.isInteger(currentRecord) && currentRecord >= 1, 'currentRecord', currentRecord, 'should be integer >= 1. If you are using currentRecord in iteration, add one to it (ie. currentRecord: i + 1)')
-    SimpleProgressBar._assert(this.options.records >= currentRecord, 'records', this.options.records, 'should be integer >= currentRecord')
+    SimpleProgressBar._assert(this.options.total >= currentRecord, 'total', this.options.total, 'should be integer >= currentRecord')
 
     if (this.currentRecord === false) {
       this._startMeasuring({ currentRecord: currentRecord })
@@ -68,14 +70,14 @@ class SimpleProgressBar {
     }
     this.currentRecord = currentRecord
 
-    let percent = Math.round(currentRecord / this.options.records * 100)
+    let percent = Math.round(currentRecord / this.options.total * 100)
     percent = percent > 100 ? 100 : percent
 
-    const dashes = '—'.repeat(Math.floor(this.options.width / 100 * percent))
+    const dashes = this.options.completed.repeat(Math.floor(this.options.width / 100 * percent))
     let fill = ''
 
     if (this.options.width - Math.floor(this.options.width / 100 * percent) > 0) {
-      fill = ' '.repeat(this.options.width - dashes.length)
+      fill = this.options.pending.repeat(this.options.width - dashes.length)
     }
 
     let extra = ' '
@@ -87,18 +89,18 @@ class SimpleProgressBar {
     }
 
     let tmpCurrentRecord = currentRecord
-    let tmpRecords = this.options.records
+    let tmpTotal = this.options.total
 
     if (this.options.format === 'bytes') {
       tmpCurrentRecord = byteSize(this.currentRecord)
-      tmpRecords = byteSize(this.options.records)
+      tmpTotal = byteSize(this.options.total)
     }
 
-    if (currentRecord >= this.options.records) {
+    if (currentRecord >= this.options.total) {
       this.timeRemaining = `(total time: ${SimpleProgressBar._formatDiff(moment.preciseDiff(moment(), this.totalStartTime))})\n`
     }
 
-    let out = `${this.options.colors.percent(`${percent}%`)}${extra} ${this.options.colors.fill(`[${dashes}${fill}]`)} ${this.options.colors.records(`${tmpCurrentRecord} of ${tmpRecords}`)} ${this.options.colors.remaining(this.timeRemaining)}`
+    let out = `${this.options.colors.percent(`${percent}%`)}${extra} ${this.options.colors.fill(`[${dashes}${fill}]`)} ${this.options.colors.records(`${tmpCurrentRecord} of ${tmpTotal}`)} ${this.options.colors.remaining(this.timeRemaining)}`
 
     if (this.maxOutLen > out.length) {
       out = `${out} ${' '.repeat(this.maxOutLen - out.length - 1)}`
@@ -143,7 +145,7 @@ class SimpleProgressBar {
       this.recordsBetween = this.recordsBetween.slice(-divider)
     }
 
-    const msToFinish = Math.round((timeDiff / SimpleProgressBar._average(this.recordsBetween)) * (this.options.records - this.currentRecord))
+    const msToFinish = Math.round((timeDiff / SimpleProgressBar._average(this.recordsBetween)) * (this.options.total - this.currentRecord))
     const timeLeftHuman = SimpleProgressBar._formatDiff(moment.preciseDiff(moment(), moment().add(msToFinish, 'ms')))
 
     this.timeRemaining = timeLeftHuman ? `(${timeLeftHuman} left)` : ''
@@ -154,8 +156,7 @@ class SimpleProgressBar {
   }
 
   static _average(ar) {
-    const total = ar.reduce((acc, c) => acc + c, 0);
-    return total / ar.length;
+    return ar.reduce((acc, c) => acc + c, 0) / ar.length
   }
 
   static _assert(cond, name, value, message) {
